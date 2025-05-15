@@ -92,13 +92,15 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Remove Test Data') {
             steps {
                 script {
-                    // Run the python script to generate data to add to the database
+                    // Find the pod running your Flask app
                     def appPod = sh(script: "kubectl get pods -l app=flask -o jsonpath='{.items[0].metadata.name}'", returnStdout: true).trim()
-                    sh "kubectl exec ${appPod} -- python3 data-clear.py"
+                    
+                    // Run both data-clear.py and filter_contacts.py inside the container
+                    sh "kubectl exec ${appPod} -- sh -c 'python3 data-clear.py && python3 filter_contacts.py'"
                 }
             }
         }
