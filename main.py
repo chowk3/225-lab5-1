@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template_string, redirect, url_for
+from markupsafe import escape
 import sqlite3
 import os
 
@@ -36,8 +37,8 @@ def index():
             db.commit()
             message = 'Contact deleted successfully.'
         else:
-            name = request.form.get('name')
-            phone = request.form.get('phone')
+            name = escape(request.form.get('name'))
+            phone = escape(request.form.get('phone'))
             if name and phone:
                 db = get_db()
                 db.execute('INSERT INTO contacts (name, phone) VALUES (?, ?)', (name, phone))
