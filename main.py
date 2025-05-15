@@ -37,8 +37,8 @@ def index():
             db.commit()
             message = 'Contact deleted successfully.'
         else:
-            name = escape(request.form.get('name'))
-            phone = escape(request.form.get('phone'))
+            name = request.form.get('name', '').strip()
+            phone = request.form.get('phone', '').strip()
             if name and phone:
                 db = get_db()
                 db.execute('INSERT INTO contacts (name, phone) VALUES (?, ?)', (name, phone))
